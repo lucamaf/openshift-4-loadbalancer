@@ -90,6 +90,9 @@ export API_LISTEN_CFG=$(build_listen_conf ${API_LISTEN:-*:6443})
 export MACHINE_CONFIG_SERVER_CFG=$(build_member_conf $MACHINE_CONFIG_SERVER)
 export MACHINE_CONFIG_SERVER_LISTEN_CFG=$(build_listen_conf ${MACHINE_CONFIG_SERVER_LISTEN:-*:22623})
 
+export NODE_PORT_CFG=$(build_member_conf $NODE_PORT)
+export NODE_PORT_LISTEN_CFG=$(build_listen_conf ${NODE_PORT_LISTEN:-*:30000-32000})
+
 envsubst < haproxy-template.cfg > /haproxy.cfg
 
 exec "$@"
