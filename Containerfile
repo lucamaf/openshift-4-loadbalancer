@@ -10,6 +10,7 @@ EXPOSE 6443
 EXPOSE 80
 EXPOSE 443
 EXPOSE 22623
+EXPOSE 30000-32000
 
 # https://www.haproxy.org/download/1.8/doc/management.txt
 # "4. Stopping and restarting HAProxy"
