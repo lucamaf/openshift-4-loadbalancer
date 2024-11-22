@@ -2,13 +2,13 @@
 OpenShift 4 load balancer for PoC's or developemt/testing purpose - NOT for production purpose
 
 **If you push changes to master, we'll immediately launch an image build on
-[quay.io](https://quay.io/repository/redhat-emea-ssa-team/openshift-4-loadbalancer?tab=info)!**
+[quay.io](https://quay.io/repository/luferrar/openshift-4-loadbalancer?tab=info)!**
 
-![build status](https://quay.io/repository/redhat-emea-ssa-team/openshift-4-loadbalancer/status)
+![build status](https://quay.io/repository/luferrar/openshift-4-loadbalancer/status)
 
 If you like to play with it and look around:
 ```
-podman run -ti quay.io/redhat-emea-ssa-team/openshift-4-loadbalancer bash
+podman run -ti quay.io/luferrar/openshift-4-loadbalancer bash
 $ haproxy -f /haproxy.cfg
 ```
 
@@ -25,6 +25,8 @@ $ haproxy -f /haproxy.cfg
 |INGRESS_HTTPS_LISTEN|Ingress https listener|`127.0.0.1:443,192.168.222.1:443`
 |MACHINE_CONFIG_SERVER|Machine config server member|`bootstrap=192.168.222.30:22623,master-0=192.168.222.31:22623`
 |MACHINE_CONFIG_SERVER_LISTEN|Machine config server listener|`127.0.0.1:22623,192.168.222.1:22623`
+|NODE_PORT|Node Port expose member|`master-0=192.168.222.31`
+|NODE_PORT_LISTEN|Node Port listener|`127.0.0.1:30000-32000,192.168.222.1:30000-32000`
 |STATS_LISTEN|Stats listen if empty stats on TCP socket is disabled|`127.0.0.1:1984`
 |STATS_ADMIN_PASSWORD|Stats admin passwort if empty stats on TCP socket is disabled|`aengeo4oodoidaiP`
 |HAPROXY_CLIENT_TIMEOUT|Client timeout for the connection. Defaults to 1m if not specified|`1m`
@@ -51,7 +53,7 @@ Type=simple
 TimeoutStartSec=5m
 
 ExecStartPre=-/usr/bin/podman rm "openshift-4-loadbalancer"
-ExecStartPre=/usr/bin/podman pull quay.io/redhat-emea-ssa-team/openshift-4-loadbalancer
+ExecStartPre=/usr/bin/podman pull quay.io/luferrar/openshift-4-loadbalancer
 ExecStart=/usr/bin/podman run --name openshift-4-loadbalancer --net host \
   -e API=bootstrap=192.168.222.30:6443,master-0=192.168.222.31:6443,master-1=192.168.222.32:6443,master-3=192.168.222.33:6443 \
   -e API_LISTEN=127.0.0.1:6443,192.168.222.1:6443 \
@@ -61,11 +63,13 @@ ExecStart=/usr/bin/podman run --name openshift-4-loadbalancer --net host \
   -e INGRESS_HTTPS_LISTEN=127.0.0.1:443,192.168.222.1:443 \
   -e MACHINE_CONFIG_SERVER=bootstrap=192.168.222.30:22623,master-0=192.168.222.31:22623,master-1=192.168.222.32:22623,master-3=192.168.222.33:22623 \
   -e MACHINE_CONFIG_SERVER_LISTEN=127.0.0.1:22623,192.168.222.1:22623 \
+  -e NODE_PORT=master-0=192.168.222.31,master-1=192.168.222.32,master-3=192.168.222.33 \
+  -e NODE_PORT_LISTEN=127.0.0.1:30000-32000,192.168.222.1:30000-32000 \
   -e STATS_LISTEN=127.0.0.1:1984 \
   -e STATS_ADMIN_PASSWORD=aengeo4oodoidaiP \
   -e HAPROXY_CLIENT_TIMEOUT=1m \
   -e HAPROXY_SERVER_TIMEOUT=1m \
-  quay.io/redhat-emea-ssa-team/openshift-4-loadbalancer
+  quay.io/luferrar/openshift-4-loadbalancer
 
 ExecReload=-/usr/bin/podman stop "openshift-4-loadbalancer"
 ExecReload=-/usr/bin/podman rm "openshift-4-loadbalancer"
