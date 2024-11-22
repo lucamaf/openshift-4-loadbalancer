@@ -8,7 +8,7 @@ on:
 jobs:
   build:
     env:
-      context: openshift-4-loadbalancer
+      context: .
       image_name: openshift-4-loadbalancer
     runs-on: ubuntu-latest
     steps:
